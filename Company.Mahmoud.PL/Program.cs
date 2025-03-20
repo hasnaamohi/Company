@@ -1,3 +1,10 @@
+using Company.Mahmoud.DAL.Data.Context;
+using Company.Mahmoud.PL.Controllers;
+using Company.Mahmoud.PLL.Interfaces;
+using Company.Mahmoud.PLL.Repositry;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+
 namespace Company.Mahmoud.PL
 {
     public class Program
@@ -8,6 +15,12 @@ namespace Company.Mahmoud.PL
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddScoped<IDepartmentRepositry, DepartmentRepositry>();
+            builder.Services.AddDbContext<CompanyDbContextcs>(Options =>
+            {
+                Options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection"));
+
+            });
 
             var app = builder.Build();
 
