@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Company.Mahmoud.PLL\Company.Mahmoud.PLL.csproj" />
+    <ProjectReference Include="..\Company.Mahmoud.PLL\Company.PLL.csproj" />
   </ItemGroup>
 
 </Project>

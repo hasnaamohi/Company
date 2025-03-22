@@ -25,7 +25,7 @@ namespace Company.Mahmoud.PLL.Repositry
         public Department? GetById(int id)
         {
             _Context.Departments.Find(id);
-            return _Context.Departments.FirstOrDefault();
+            return _Context.Departments.First();
         }
         public int add(Department model)
         {
