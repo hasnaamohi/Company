@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Company.PLL.Interfaces
 {
-    public interface IEmployeeRepositry
+    public interface IEmployeeRepositry:IGenericRepositry<Employee>
     {
-        IEnumerable<Employee> GetAll();
-        Employee? GetById(int id);
-        int add(Employee model);
-        int update(Employee model);
-        int delete(Employee model);
+        //IEnumerable<Employee> GetAll();
+        //Employee? GetById(int id);
+        //int add(Employee model);
+        //int update(Employee model);
+        //int delete(Employee model);
     }
 }

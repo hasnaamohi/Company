@@ -1,6 +1,7 @@
 ﻿using Company.Mahmoud.DAL.Data.Context;
 using Company.Mahmoud.DAL.Models;
 using Company.Mahmoud.PLL.Interfaces;
+using Company.PLL.Repositry;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System;
 using System.Collections.Generic;
@@ -10,41 +11,48 @@ using System.Threading.Tasks;
 
 namespace Company.Mahmoud.PLL.Repositry
 {
-    public class DepartmentRepositry : IDepartmentRepositry
+    public class DepartmentRepositry : GenericRepositry<Department>,IDepartmentRepositry
     {
-        private readonly CompanyDbContextcs  _Context;
-        public DepartmentRepositry(CompanyDbContextcs Context)
+        public DepartmentRepositry(CompanyDbContextcs context) : base(context)
         {
-            _Context = Context;
-        }
-        public IEnumerable<Department> GetAll()
-        {
-            return _Context.Departments.ToList();
-        }
 
-        public Department? GetById(int id)
-        {
-            _Context.Departments.Find(id);
-            return _Context.Departments.First();
         }
-        public int add(Department model)
-        {
-            _Context.Departments.Add(model);
-            return _Context.SaveChanges();
-            
-        }
+        #region beforeUseGenric
+        ////private readonly CompanyDbContextcs  _Context;
+        ////public DepartmentRepositry(CompanyDbContextcs Context)
+        ////{
+        ////    _Context = Context;
+        ////}
+        ////public IEnumerable<Department> GetAll()
+        ////{
+        ////    return _Context.Departments.ToList();
+        ////}
+
+        ////public Department? GetById(int id)
+        ////{
+        ////    _Context.Departments.Find(id);
+        ////    return _Context.Departments.First();
+        ////}
+        ////public int add(Department model)
+        ////{
+        ////    _Context.Departments.Add(model);
+        ////    return _Context.SaveChanges();
+
+        ////}
 
 
-        public int update(Department model)
-        {
-            _Context.Departments.Update(model);
-            return _Context.SaveChanges();
-        }
+        ////public int update(Department model)
+        ////{
+        ////    _Context.Departments.Update(model);
+        ////    return _Context.SaveChanges();
+        ////}
 
-        public int delete(Department model)
-        {
-            _Context.Departments.Remove(model);
-            return _Context.SaveChanges();
-        }
+        ////public int delete(Department model)
+        ////{
+        ////    _Context.Departments.Remove(model);
+        ////    return _Context.SaveChanges();
+        ////} 
+        #endregion
+
     }
 }

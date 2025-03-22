@@ -9,41 +9,47 @@ using System.Threading.Tasks;
 
 namespace Company.PLL.Repositry
 {
-    internal class EmployeeRepositry : IEmployeeRepositry
+    internal class EmployeeRepositry :GenericRepositry<Employee>, IEmployeeRepositry
     {
-        private readonly CompanyDbContextcs _context;
-        public EmployeeRepositry(CompanyDbContextcs context)
+        public EmployeeRepositry(CompanyDbContextcs context):base(context) 
         {
-            context = _context;
-        }
-        public IEnumerable<Employee> GetAll()
-        {
-            return _context.Employees.ToList();
-        }
-        public Employee? GetById(int id)
-        {
-            return _context.Employees.Find(id);
-        }
-
-        public int add(Employee model)
-        {
-           _context.Employees.Add(model);
-            return _context.SaveChanges();
             
         }
+        #region BeforeUseGeneric
+        //private readonly CompanyDbContextcs _context;
+        //public EmployeeRepositry(CompanyDbContextcs context)
+        //{
+        //    context = _context;
+        //}
+        //public IEnumerable<Employee> GetAll()
+        //{
+        //    return _context.Employees.ToList();
+        //}
+        //public Employee? GetById(int id)
+        //{
+        //    return _context.Employees.Find(id);
+        //}
 
-    
-        public int update(Employee model)
-        {
-            _context.Employees.Update(model);
-            return _context.SaveChanges();
-        }
+        //public int add(Employee model)
+        //{
+        //   _context.Employees.Add(model);
+        //    return _context.SaveChanges();
 
-        public int delete(Employee model)
-        {
-            _context.Employees.Remove(model);
-            return _context.SaveChanges();
-        }
+        //}
+
+
+        //public int update(Employee model)
+        //{
+        //    _context.Employees.Update(model);
+        //    return _context.SaveChanges();
+        //}
+
+        //public int delete(Employee model)
+        //{
+        //    _context.Employees.Remove(model);
+        //    return _context.SaveChanges();
+        //} 
+        #endregion
 
     }
 }
