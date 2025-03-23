@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Company.PLL.Repositry
 {
-    internal class EmployeeRepositry :GenericRepositry<Employee>, IEmployeeRepositry
+    public class EmployeeRepositry : GenericRepositry<Employee>, IEmployeeRepositry
     {
         public EmployeeRepositry(CompanyDbContextcs context):base(context) 
         {

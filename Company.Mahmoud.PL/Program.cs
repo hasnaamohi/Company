@@ -2,6 +2,8 @@ using Company.Mahmoud.DAL.Data.Context;
 using Company.Mahmoud.PL.Controllers;
 using Company.Mahmoud.PLL.Interfaces;
 using Company.Mahmoud.PLL.Repositry;
+using Company.PLL.Interfaces;
+using Company.PLL.Repositry;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -15,7 +17,9 @@ namespace Company.Mahmoud.PL
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+           
             builder.Services.AddScoped<IDepartmentRepositry, DepartmentRepositry>();
+            builder.Services.AddScoped<IEmployeeRepositry, EmployeeRepositry>();
             builder.Services.AddDbContext<CompanyDbContextcs>(Options =>
             {
                 Options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection"));
