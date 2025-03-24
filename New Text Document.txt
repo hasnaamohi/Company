@@ -1,0 +1,17 @@
+ var employeeDto= new EmployeeDto()
+ {
+    
+     Name = employee.Name,
+     Address = employee.Address,
+
+     Email = employee.Email,
+     IsActive = employee.IsActive,
+     CreateAt = employee.CreateAt,
+     HiringDate = employee.HiringDate,
+     Salary = employee.Salary,
+     IsDeleted = employee.IsDeleted,
+     Phone = employee.Phone,
+     Age = employee.Age
+
+ };
+ return View(employeeDto);

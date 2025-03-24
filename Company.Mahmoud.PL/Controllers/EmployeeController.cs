@@ -68,6 +68,74 @@ namespace Company.PL.Controllers
 
         }
 
+        #region EditParialViewError
+        //[HttpGet]
+        //public IActionResult Edit(int? id)
+        //{
+        //    if (id is null) { return BadRequest("Invaild , Enter Employee Id"); };
+        //    var employee = _EmployeeRepositry.GetById(id.Value);
+        //    if (employee is null) { return NotFound($"Empolyee with id :{id} Not Found"); }
+        //    var employeeDto = new EmployeeDto()
+        //    {
+
+        //        Name = employee.Name,
+        //        Address = employee.Address,
+
+        //        Email = employee.Email,
+        //        IsActive = employee.IsActive,
+        //        CreateAt = employee.CreateAt,
+        //        HiringDate = employee.HiringDate,
+        //        Salary = employee.Salary,
+        //        IsDeleted = employee.IsDeleted,
+        //        Phone = employee.Phone,
+        //        Age = employee.Age
+
+        //    };
+        //    return View(employeeDto);
+
+
+        //}
+
+        //   // return Details(id, "Edit");
+        //}
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+
+        //public IActionResult Edit([FromRoute] int id, EmployeeDto model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        //  if (id!=model.Id)
+        //        var employee = new Employee()
+        //        {
+        //            Id=id,
+        //            Name = model.Name,
+        //            Address = model.Address,
+
+        //            Email = model.Email,
+        //            IsActive = model.IsActive,
+        //            CreateAt = model.CreateAt,
+        //            HiringDate = model.HiringDate,
+        //            Salary = model.Salary,
+        //            IsDeleted = model.IsDeleted,
+        //            Phone = model.Phone,
+        //            Age = model.Age
+
+        //        };
+
+        //        //{// return BadRequest("Invaild , Enter Employee Id"); }
+        //        var count =_EmployeeRepositry.update(employee);
+        //        if(count>0)
+        //        {
+        //            return RedirectToAction(nameof(Index));
+        //        }
+        //    }
+
+        //    return View(model);
+        //} 
+        #endregion
+
         [HttpGet]
         public IActionResult Edit(int? id)
         {
@@ -78,14 +146,14 @@ namespace Company.PL.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public IActionResult Edit([FromRoute] int id, Employee model)
+        public IActionResult Edit([FromRoute] int id, EmployeeDto model)
         {
             if (ModelState.IsValid)
             {
-                if (id!=model.Id)
+                if (id != model.Id)
                 { return BadRequest("Invaild , Enter Employee Id"); }
-                var count =_EmployeeRepositry.update(model);
-                if(count>0)
+                var count = _EmployeeRepositry.update(model);
+                if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
                 }
@@ -95,7 +163,6 @@ namespace Company.PL.Controllers
         }
 
 
-       
         [HttpGet]
         public IActionResult Delete(int? id)
         {
