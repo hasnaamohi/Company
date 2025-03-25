@@ -9,10 +9,8 @@ namespace Company.PLL.Interfaces
 {
     public interface IEmployeeRepositry:IGenericRepositry<Employee>
     {
-        //IEnumerable<Employee> GetAll();
-        //Employee? GetById(int id);
-        //int add(Employee model);
-        //int update(Employee model);
-        //int delete(Employee model);
+        
+        List<Employee> GetByName(string name);
+
     }
 }

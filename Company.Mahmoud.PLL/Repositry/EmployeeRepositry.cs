@@ -1,6 +1,7 @@
 ﻿using Company.Mahmoud.DAL.Data.Context;
 using Company.Mahmoud.DAL.Models;
 using Company.PLL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +12,21 @@ namespace Company.PLL.Repositry
 {
     public class EmployeeRepositry : GenericRepositry<Employee>, IEmployeeRepositry
     {
+        private readonly CompanyDbContextcs _context;
+
         public EmployeeRepositry(CompanyDbContextcs context):base(context) 
         {
+            _context = context;
+        }
+
+        public List<Employee> GetByName(string name)
+        {
+
+            return _context.Employees.Include(E=>E.Department).Where(E => E.Name.ToLower().Contains(name.ToLower())).ToList();
             
         }
+
+
         #region BeforeUseGeneric
         //private readonly CompanyDbContextcs _context;
         //public EmployeeRepositry(CompanyDbContextcs context)

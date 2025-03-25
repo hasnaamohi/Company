@@ -18,10 +18,18 @@ namespace Company.PL.Controllers
             _EmployeeRepositry = EmployeeRepositry;
             _departmentRepositry = departmentRepositry;
         }
-        public IActionResult Index()
+        public IActionResult Index(string SearchInput)
         {
-
-            var employees = _EmployeeRepositry.GetAll();
+            IEnumerable<Employee> employees;
+            if (string.IsNullOrEmpty(SearchInput))
+            { 
+               employees = _EmployeeRepositry.GetAll();
+            }
+            else
+            {
+                employees = _EmployeeRepositry.GetByName(SearchInput);
+            }
+            
             return View(employees);
         }
         [HttpGet]
