@@ -1,6 +1,8 @@
 ﻿using Company.DAL.Models;
 using Company.Mahmoud.DAL.Data.Context;
+using Company.Mahmoud.DAL.Models;
 using Company.PLL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +22,20 @@ namespace Company.PLL.Repositry
 
          public IEnumerable<T> GetAll()
         {
+            if (typeof(T) == typeof(Employee))
+            {
+                return (IEnumerable<T>)_context.Employees.Include(E => E.Department).ToList();
+            }
             return _context.Set<T>().ToList();
         }
 
         public T? GetById(int id)
+
         {
+            if (typeof(T) == typeof(Employee))
+            {
+                return _context.Employees.Include(E => E.Department).FirstOrDefault(E => E.Id == id) as T;
+            }
             return _context.Set<T>().Find(id);
         }
         public int add(T model)

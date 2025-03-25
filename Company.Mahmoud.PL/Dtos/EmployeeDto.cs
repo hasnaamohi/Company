@@ -1,10 +1,13 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Company.PL.Dtos
 {
     public class EmployeeDto
     {
+        
+
         [Required (ErrorMessage = "the code Required")]
         public string Name { get; set; }
 
@@ -27,5 +30,7 @@ namespace Company.PL.Dtos
         public DateTime HiringDate { get; set; }
         [DisplayName("Date of Creation")]
         public DateTime CreateAt { get; set; }
+        [DisplayName("Department")]
+        public int? DepartmentId { get; set; }
     }
 }
