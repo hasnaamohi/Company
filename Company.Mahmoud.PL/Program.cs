@@ -2,6 +2,8 @@ using Company.Mahmoud.DAL.Data.Context;
 using Company.Mahmoud.PL.Controllers;
 using Company.Mahmoud.PLL.Interfaces;
 using Company.Mahmoud.PLL.Repositry;
+using Company.PL.Mapping;
+using Company.PL.Services;
 using Company.PLL.Interfaces;
 using Company.PLL.Repositry;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +27,10 @@ namespace Company.Mahmoud.PL
                 Options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection"));
 
             });
+            builder.Services.AddAutoMapper(M => M.AddProfile(new EmployeeProfile()));
+            builder.Services.AddScoped<IScopedService, ScopedService>(); //per reqeust
+            builder.Services.AddTransient<ITransentService,TransentService>(); //per operation
+            builder.Services.AddSingleton<ISingeltonService, SingletonService>();  //per app
 
             var app = builder.Build();
 

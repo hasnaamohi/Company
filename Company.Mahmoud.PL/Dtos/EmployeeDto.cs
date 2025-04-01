@@ -29,7 +29,7 @@ namespace Company.PL.Dtos
         [DisplayName("Hiring Date")]
         public DateTime HiringDate { get; set; }
         [DisplayName("Date of Creation")]
-        public DateTime CreateAt { get; set; }
+        public DateTime CreateAt { get; set; }= DateTime.Now;
         [DisplayName("Department")]
         public int? DepartmentId { get; set; }
     }

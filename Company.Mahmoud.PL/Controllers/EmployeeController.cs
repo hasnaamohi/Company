@@ -1,4 +1,5 @@
-﻿using Company.Mahmoud.DAL.Models;
+﻿using AutoMapper;
+using Company.Mahmoud.DAL.Models;
 using Company.Mahmoud.PL.Dtos;
 using Company.Mahmoud.PLL.Interfaces;
 using Company.Mahmoud.PLL.Repositry;
@@ -12,11 +13,16 @@ namespace Company.PL.Controllers
     {
         private readonly IEmployeeRepositry _EmployeeRepositry;
         private readonly IDepartmentRepositry _departmentRepositry;
+        private readonly IMapper _mapper;
 
-        public EmployeeController(IEmployeeRepositry EmployeeRepositry,IDepartmentRepositry departmentRepositry)
+        public EmployeeController(
+            IEmployeeRepositry EmployeeRepositry,
+            IDepartmentRepositry departmentRepositry,
+            IMapper mapper)
         {
             _EmployeeRepositry = EmployeeRepositry;
             _departmentRepositry = departmentRepositry;
+            _mapper= mapper;
         }
         public IActionResult Index(string SearchInput)
         {
@@ -44,23 +50,24 @@ namespace Company.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                var employee = new Employee()
-                {
+                //var employee = new Employee()
+                //{
                     
-                    Name = model.Name,
-                    Address = model.Address,
+                //    Name = model.Name,
+                //    Address = model.Address,
                     
-                    Email = model.Email,
-                    IsActive = model.IsActive,
-                    CreateAt = model.CreateAt,
-                    HiringDate = model.HiringDate,
-                    Salary = model.Salary,
-                    IsDeleted = model.IsDeleted,
-                    Phone = model.Phone ,
-                    Age=model.Age,
-                    DepartmentId = model.DepartmentId
+                //    Email = model.Email,
+                //    IsActive = model.IsActive,
+                //    CreateAt = model.CreateAt,
+                //    HiringDate = model.HiringDate,
+                //    Salary = model.Salary,
+                //    IsDeleted = model.IsDeleted,
+                //    Phone = model.Phone ,
+                //    Age=model.Age,
+                //    DepartmentId = model.DepartmentId
 
-                };
+                //};
+                var employee=_mapper.Map<Employee>(model);
                 var count = _EmployeeRepositry.add(employee);
                 if (count > 0)
                 {
