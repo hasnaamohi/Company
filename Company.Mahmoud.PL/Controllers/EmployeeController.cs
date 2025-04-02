@@ -11,29 +11,33 @@ namespace Company.PL.Controllers
 {
     public class EmployeeController : Controller
     {
-        private readonly IEmployeeRepositry _EmployeeRepositry;
-        private readonly IDepartmentRepositry _departmentRepositry;
+        private readonly IUnitOfWork _unitOfWork;
+
+        //private readonly IEmployeeRepositry _EmployeeRepositry;
+        //private readonly IDepartmentRepositry _departmentRepositry;
         private readonly IMapper _mapper;
 
         public EmployeeController(
-            IEmployeeRepositry EmployeeRepositry,
-            IDepartmentRepositry departmentRepositry,
+            //IEmployeeRepositry EmployeeRepositry,
+            //IDepartmentRepositry departmentRepositry,
+            IUnitOfWork unitOfWork,
             IMapper mapper)
         {
-            _EmployeeRepositry = EmployeeRepositry;
-            _departmentRepositry = departmentRepositry;
-            _mapper= mapper;
+           _unitOfWork = unitOfWork;
+            //_EmployeeRepositry = EmployeeRepositry;
+            //_departmentRepositry = departmentRepositry;
+            _mapper = mapper;
         }
         public IActionResult Index(string SearchInput)
         {
             IEnumerable<Employee> employees;
             if (string.IsNullOrEmpty(SearchInput))
             { 
-               employees = _EmployeeRepositry.GetAll();
+               employees = _unitOfWork.EmployeeRepositry.GetAll();
             }
             else
             {
-                employees = _EmployeeRepositry.GetByName(SearchInput);
+                employees = _unitOfWork.EmployeeRepositry.GetByName(SearchInput);
             }
             
             return View(employees);
@@ -41,7 +45,7 @@ namespace Company.PL.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            var departments = _departmentRepositry.GetAll();
+            var departments = _unitOfWork.DepartmentRepositry.GetAll();
             ViewData["departments"] = departments;
             return View();
         }
@@ -68,7 +72,8 @@ namespace Company.PL.Controllers
 
                 //};
                 var employee=_mapper.Map<Employee>(model);
-                var count = _EmployeeRepositry.add(employee);
+                 _unitOfWork.EmployeeRepositry.add(employee);
+                var count = _unitOfWork.Complete();
                 if (count > 0)
                 {
                     TempData["Message"]="Employee Is Created";
@@ -82,7 +87,7 @@ namespace Company.PL.Controllers
         public IActionResult Details(int? id, string viewName = "Details")
         {
             if (id is null) { return BadRequest("Invaild , Enter Employee Id"); };
-            var employee = _EmployeeRepositry.GetById(id.Value);
+            var employee = _unitOfWork.EmployeeRepositry.GetById(id.Value);
             if (employee is null) { return NotFound($"Empolyee with id :{id} Not Found"); }
 
             return View(viewName, employee);
@@ -94,10 +99,10 @@ namespace Company.PL.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            var departments = _departmentRepositry.GetAll();
+            var departments = _unitOfWork.DepartmentRepositry.GetAll();
             ViewData["departments"] = departments;
             if (id is null) { return BadRequest("Invaild , Enter Employee Id"); };
-            var employee = _EmployeeRepositry.GetById(id.Value);
+            var employee = _unitOfWork.EmployeeRepositry.GetById(id.Value);
             if (employee is null) { return NotFound($"Empolyee with id :{id} Not Found"); }
             var employeeDto = new EmployeeDto()
             {
@@ -149,7 +154,8 @@ namespace Company.PL.Controllers
                 };
 
                 //{// return BadRequest("Invaild , Enter Employee Id"); }
-                var count = _EmployeeRepositry.update(employee);
+               _unitOfWork.EmployeeRepositry.update(employee);
+                var count = _unitOfWork.Complete();
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -203,7 +209,8 @@ namespace Company.PL.Controllers
             if (ModelState.IsValid)
             {
                 if (id != model.Id) { return BadRequest("Invaild , Enter Employee Id"); }
-                var count = _EmployeeRepositry.delete(model);
+                 _unitOfWork.EmployeeRepositry.delete(model);
+                var count = _unitOfWork.Complete();
                 if (count > 0) { return RedirectToAction(nameof(Index)); }
             }
             return View(model);

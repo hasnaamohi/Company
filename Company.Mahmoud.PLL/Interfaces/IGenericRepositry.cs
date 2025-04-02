@@ -13,9 +13,9 @@ namespace Company.PLL.Interfaces
     {
         IEnumerable<T> GetAll();
         T? GetById(int id);
-        int add(T model);
-        int update(T model);
-        int delete(T model);
+        void add(T model);
+        void update(T model);
+        void delete(T model);
     }
 
 }
