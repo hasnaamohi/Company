@@ -3,6 +3,7 @@ using Company.Mahmoud.PL.Dtos;
 using Company.Mahmoud.PLL.Interfaces;
 using Company.Mahmoud.PLL.Repositry;
 using Company.PL.Dtos;
+using Company.PLL;
 using Company.PLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,15 +11,18 @@ namespace Company.Mahmoud.PL.Controllers
 {
     public class DepartmentController : Controller
     {
-        private readonly IDepartmentRepositry _departmentRepositry;
-        public DepartmentController(IDepartmentRepositry departmentRepositry)
+        // private readonly IDepartmentRepositry _departmentRepositry;
+        private readonly IUnitOfWork _unitOfWork;
+        public DepartmentController(IUnitOfWork unitOfWork)
         {
-            _departmentRepositry = departmentRepositry;
+            //_departmentRepositry = departmentRepositry;
+               _unitOfWork = unitOfWork;
+
         }
         public IActionResult Index()
         {
             
-            var departments= _departmentRepositry.GetAll();    
+            var departments= _unitOfWork.DepartmentRepositry.GetAll();    
             return View(departments);
         }
         [HttpGet]
@@ -38,7 +42,8 @@ namespace Company.Mahmoud.PL.Controllers
                     CreateAt = model.CreateAt
 
                 };
-                var count =_departmentRepositry.add(department);
+                 _unitOfWork.DepartmentRepositry.add(department);
+                var count = _unitOfWork.Complete();
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -51,7 +56,7 @@ namespace Company.Mahmoud.PL.Controllers
         public IActionResult Details(int? id, string viewName = "Details")
         {
             if (id is null) { return BadRequest("Invaild , Enter Department Id"); };
-            var department = _departmentRepositry.GetById(id.Value);
+            var department = _unitOfWork.DepartmentRepositry.GetById(id.Value);
             if (department is null) { return NotFound($"department with id :{id} Not Found"); }
 
             return View(viewName, department);
@@ -75,7 +80,8 @@ namespace Company.Mahmoud.PL.Controllers
             {
                 if (id != model.Id)
                 { return BadRequest("Invaild , Enter Employee Id"); }
-                var count = _departmentRepositry.update(model);
+                _unitOfWork.DepartmentRepositry.update(model);
+                var count = _unitOfWork.Complete();
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -100,7 +106,8 @@ namespace Company.Mahmoud.PL.Controllers
             if (ModelState.IsValid)
             {
                 if (id != model.Id) { return BadRequest("Invaild , Enter department Id"); }
-                var count = _departmentRepositry.delete(model);
+                 _unitOfWork.DepartmentRepositry.delete(model);
+                var count = _unitOfWork.Complete();
                 if (count > 0) { return RedirectToAction(nameof(Index)); }
             }
             return View(model);

@@ -38,24 +38,24 @@ namespace Company.PLL.Repositry
             }
             return _context.Set<T>().Find(id);
         }
-        public int add(T model)
+        public void add(T model)
         {
             _context.Set<T>().Add(model);
-            return _context.SaveChanges();
+           
         }
 
 
 
-        public int update(T model)
+        public void update(T model)
         {
             _context.Set<T>().Update(model);
-            return _context.SaveChanges();
+           
         }
 
-        public int delete(T model)
+        public void delete(T model)
         {
             _context.Set<T>().Remove(model);
-            return _context.SaveChanges();
+           
         }
 
     }
