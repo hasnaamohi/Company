@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Company.PLL.Interfaces
 {
-    public interface IUnitOfWork:IDisposable
+    public interface IUnitOfWork:IAsyncDisposable
     {
         public  IDepartmentRepositry DepartmentRepositry { get;}
         public IEmployeeRepositry EmployeeRepositry{ get; }
-        int Complete();
+        Task<int> CompleteAsync();
     }
 }

@@ -10,7 +10,7 @@ namespace Company.PLL.Interfaces
     public interface IEmployeeRepositry:IGenericRepositry<Employee>
     {
         
-        List<Employee> GetByName(string name);
+        Task<List<Employee>> GetByNameAsync(string name);
 
     }
 }

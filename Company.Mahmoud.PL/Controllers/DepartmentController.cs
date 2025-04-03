@@ -19,10 +19,10 @@ namespace Company.Mahmoud.PL.Controllers
                _unitOfWork = unitOfWork;
 
         }
-        public IActionResult Index()
+        public async Task < IActionResult> Index()
         {
             
-            var departments= _unitOfWork.DepartmentRepositry.GetAll();    
+            var departments=await _unitOfWork.DepartmentRepositry.GetAllAsync();    
             return View(departments);
         }
         [HttpGet]
@@ -31,7 +31,7 @@ namespace Company.Mahmoud.PL.Controllers
             return View();  
         }
         [HttpPost]
-        public IActionResult Create(DepartmentDto model)
+        public async Task<IActionResult> Create(DepartmentDto model)
         {
             if (ModelState.IsValid)
             {
@@ -42,8 +42,8 @@ namespace Company.Mahmoud.PL.Controllers
                     CreateAt = model.CreateAt
 
                 };
-                 _unitOfWork.DepartmentRepositry.add(department);
-                var count = _unitOfWork.Complete();
+                await _unitOfWork.DepartmentRepositry.addAsync(department);
+                var count =await _unitOfWork.CompleteAsync();
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -53,10 +53,10 @@ namespace Company.Mahmoud.PL.Controllers
             return View(model);
         }
         [HttpGet]
-        public IActionResult Details(int? id, string viewName = "Details")
+        public async Task<IActionResult> Details(int? id, string viewName = "Details")
         {
-            if (id is null) { return BadRequest("Invaild , Enter Department Id"); };
-            var department = _unitOfWork.DepartmentRepositry.GetById(id.Value);
+            if (id is null) { return BadRequest("Invaild , Enter Department Id"); }
+            var department =await _unitOfWork.DepartmentRepositry.GetByIdAsync(id.Value);
             if (department is null) { return NotFound($"department with id :{id} Not Found"); }
 
             return View(viewName, department);
@@ -65,23 +65,47 @@ namespace Company.Mahmoud.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
 
-            return Details(id, "Edit");
+            if (id is null) 
+            { 
+                return BadRequest("Invaild , Enter Department Id"); 
+            }
+            var department = await _unitOfWork.DepartmentRepositry.GetByIdAsync(id.Value);
+            if (department is null) 
+            {
+                return NotFound($"department with id :{id} Not Found");
+            }
+
+            var dto = new DepartmentDto()
+            {
+                Name = department.Name,
+                Code = department.Code,
+                CreateAt = department.CreateAt
+            };
+            return View(dto);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public IActionResult Edit([FromRoute] int id, Department model)
+        public async Task<IActionResult> Edit([FromRoute] int id, DepartmentDto model)
         {
             if (ModelState.IsValid)
             {
-                if (id != model.Id)
-                { return BadRequest("Invaild , Enter Employee Id"); }
-                _unitOfWork.DepartmentRepositry.update(model);
-                var count = _unitOfWork.Complete();
+                var department = new Department()
+                {
+                    Id = id,
+                    Name = model.Name,
+                    Code = model.Code,
+                    CreateAt = model.CreateAt,
+
+                };
+                //if (id != model.Id)
+                //{ return BadRequest("Invaild , Enter Employee Id"); }
+                _unitOfWork.DepartmentRepositry.update(department);
+                var count =await _unitOfWork.CompleteAsync();
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -94,21 +118,47 @@ namespace Company.Mahmoud.PL.Controllers
 
 
         [HttpGet]
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            return Details(id, "Delete");
+            if (id is null)
+            { 
+                return BadRequest("Invaild , Enter Department Id");
+            }
+            var department = await _unitOfWork.DepartmentRepositry.GetByIdAsync(id.Value);
+            if (department is null) 
+            { 
+                return NotFound($"department with id :{id} Not Found");
+            }
 
+            var Dto = new DepartmentDto()
+            {
+                Name = department.Name,
+                Code = department.Code,
+                CreateAt = department.CreateAt
+            };
+            return View(Dto);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete([FromRoute] int id, Department model)
+        public async Task<IActionResult> Delete([FromRoute] int id, DepartmentDto model)
         {
             if (ModelState.IsValid)
             {
-                if (id != model.Id) { return BadRequest("Invaild , Enter department Id"); }
-                 _unitOfWork.DepartmentRepositry.delete(model);
-                var count = _unitOfWork.Complete();
-                if (count > 0) { return RedirectToAction(nameof(Index)); }
+                var department = new Department()
+                {
+                    Id = id,
+                    Name = model.Name,
+                    Code = model.Code,
+                    CreateAt = model.CreateAt,
+
+                };
+                //if (id != model.Id) { return BadRequest("Invaild , Enter department Id"); }
+                _unitOfWork.DepartmentRepositry.delete(department);
+                var count = await _unitOfWork.CompleteAsync();
+                if (count > 0)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
             }
             return View(model);
 

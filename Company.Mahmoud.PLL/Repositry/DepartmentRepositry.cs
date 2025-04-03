@@ -13,9 +13,11 @@ namespace Company.Mahmoud.PLL.Repositry
 {
     public class DepartmentRepositry : GenericRepositry<Department>,IDepartmentRepositry
     {
+        private readonly CompanyDbContextcs _context;
+
         public DepartmentRepositry(CompanyDbContextcs context) : base(context)
         {
-
+            _context = context;
         }
         #region beforeUseGenric
         ////private readonly CompanyDbContextcs  _Context;
