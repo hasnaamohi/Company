@@ -11,9 +11,9 @@ namespace Company.PLL.Interfaces
    public interface IGenericRepositry<T> where T : BaseEntity
 
     {
-        IEnumerable<T> GetAll();
-        T? GetById(int id);
-        void add(T model);
+        Task<IEnumerable<T>> GetAllAsync();
+        Task<T?> GetByIdAsync(int id);
+        Task addAsync(T model);
         void update(T model);
         void delete(T model);
     }

@@ -4,6 +4,7 @@ using Company.Mahmoud.PL.Dtos;
 using Company.Mahmoud.PLL.Interfaces;
 using Company.Mahmoud.PLL.Repositry;
 using Company.PL.Dtos;
+using Company.PL.Helper;
 using Company.PLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,52 +29,41 @@ namespace Company.PL.Controllers
             //_departmentRepositry = departmentRepositry;
             _mapper = mapper;
         }
-        public IActionResult Index(string SearchInput)
+        public async Task<IActionResult>Index(string SearchInput)
         {
             IEnumerable<Employee> employees;
             if (string.IsNullOrEmpty(SearchInput))
             { 
-               employees = _unitOfWork.EmployeeRepositry.GetAll();
+               employees = await _unitOfWork.EmployeeRepositry.GetAllAsync();
             }
             else
             {
-                employees = _unitOfWork.EmployeeRepositry.GetByName(SearchInput);
+                employees = await _unitOfWork.EmployeeRepositry.GetByNameAsync(SearchInput);
             }
             
             return View(employees);
         }
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var departments = _unitOfWork.DepartmentRepositry.GetAll();
+            var departments = await _unitOfWork.DepartmentRepositry.GetAllAsync();
             ViewData["departments"] = departments;
             return View();
         }
         [HttpPost]
-        public IActionResult Create(EmployeeDto model)
+        public async Task<IActionResult> Create(EmployeeDto model)
         {
             if (ModelState.IsValid)
             {
-                //var employee = new Employee()
-                //{
-                    
-                //    Name = model.Name,
-                //    Address = model.Address,
-                    
-                //    Email = model.Email,
-                //    IsActive = model.IsActive,
-                //    CreateAt = model.CreateAt,
-                //    HiringDate = model.HiringDate,
-                //    Salary = model.Salary,
-                //    IsDeleted = model.IsDeleted,
-                //    Phone = model.Phone ,
-                //    Age=model.Age,
-                //    DepartmentId = model.DepartmentId
+                if (model.Image is not null)
+                {
+                    model.ImageName = DocumentSettings.UploadFile(model.Image, "images");
+                }
+              
 
-                //};
                 var employee=_mapper.Map<Employee>(model);
-                 _unitOfWork.EmployeeRepositry.add(employee);
-                var count = _unitOfWork.Complete();
+                 await _unitOfWork.EmployeeRepositry.addAsync(employee);
+                var count =await _unitOfWork.CompleteAsync();
                 if (count > 0)
                 {
                     TempData["Message"]="Employee Is Created";
@@ -84,10 +74,10 @@ namespace Company.PL.Controllers
             return View(model);
         }
         [HttpGet]
-        public IActionResult Details(int? id, string viewName = "Details")
+        public async Task<IActionResult> Details(int? id, string viewName = "Details")
         {
             if (id is null) { return BadRequest("Invaild , Enter Employee Id"); };
-            var employee = _unitOfWork.EmployeeRepositry.GetById(id.Value);
+            var employee =await _unitOfWork.EmployeeRepositry.GetByIdAsync(id.Value);
             if (employee is null) { return NotFound($"Empolyee with id :{id} Not Found"); }
 
             return View(viewName, employee);
@@ -97,29 +87,32 @@ namespace Company.PL.Controllers
 
         #region EditParialViewError
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            var departments = _unitOfWork.DepartmentRepositry.GetAll();
+            var departments =await _unitOfWork.DepartmentRepositry.GetAllAsync();
             ViewData["departments"] = departments;
             if (id is null) { return BadRequest("Invaild , Enter Employee Id"); };
-            var employee = _unitOfWork.EmployeeRepositry.GetById(id.Value);
+            var employee =await _unitOfWork.EmployeeRepositry.GetByIdAsync(id.Value);
             if (employee is null) { return NotFound($"Empolyee with id :{id} Not Found"); }
-            var employeeDto = new EmployeeDto()
-            {
+            #region manualCasting
+            //var employeeDto = new EmployeeDto()
+            //{
 
-                Name = employee.Name,
-                Address = employee.Address,
+            //    Name = employee.Name,
+            //    Address = employee.Address,
 
-                Email = employee.Email,
-                IsActive = employee.IsActive,
-                CreateAt = employee.CreateAt,
-                HiringDate = employee.HiringDate,
-                Salary = employee.Salary,
-                IsDeleted = employee.IsDeleted,
-                Phone = employee.Phone,
-                Age = employee.Age
+            //    Email = employee.Email,
+            //    IsActive = employee.IsActive,
+            //    CreateAt = employee.CreateAt,
+            //    HiringDate = employee.HiringDate,
+            //    Salary = employee.Salary,
+            //    IsDeleted = employee.IsDeleted,
+            //    Phone = employee.Phone,
+            //    Age = employee.Age
 
-            };
+            //}; 
+            #endregion
+            var employeeDto=_mapper.Map<EmployeeDto>(employee);
             return View(employeeDto);
 
 
@@ -131,31 +124,43 @@ namespace Company.PL.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public IActionResult Edit([FromRoute] int id, EmployeeDto model)
+        public async Task<IActionResult> Edit([FromRoute] int id, EmployeeDto model)
         {
             if (ModelState.IsValid)
             {
-                //  if (id!=model.Id)
-                var employee = new Employee()
+                if (model.ImageName is not null && model.Image is not null)
                 {
-                    Id = id,
-                    Name = model.Name,
-                    Address = model.Address,
+                    DocumentSettings.DeleteFile(model.ImageName, "images");
+                }
+                if (model.Image is not null)
+                {
+                    model.ImageName = DocumentSettings.UploadFile(model.Image, "images");
+                }
+                #region ManualMapping
+                //  if (id!=model.Id)
+                //var employee = new Employee()
+                //{
+                //    Id = id,
+                //    Name = model.Name,
+                //    Address = model.Address,
 
-                    Email = model.Email,
-                    IsActive = model.IsActive,
-                    CreateAt = model.CreateAt,
-                    HiringDate = model.HiringDate,
-                    Salary = model.Salary,
-                    IsDeleted = model.IsDeleted,
-                    Phone = model.Phone,
-                    Age = model.Age
+                //    Email = model.Email,
+                //    IsActive = model.IsActive,
+                //    CreateAt = model.CreateAt,
+                //    HiringDate = model.HiringDate,
+                //    Salary = model.Salary,
+                //    IsDeleted = model.IsDeleted,
+                //    Phone = model.Phone,
+                //    Age = model.Age
 
-                };
+                //}; 
+                #endregion
+                var employee = _mapper.Map<Employee>(model);
+                employee.Id = id;
 
                 //{// return BadRequest("Invaild , Enter Employee Id"); }
                _unitOfWork.EmployeeRepositry.update(employee);
-                var count = _unitOfWork.Complete();
+                var count = await _unitOfWork.CompleteAsync();
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -197,21 +202,31 @@ namespace Company.PL.Controllers
 
 
         [HttpGet]
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            return Details(id, "Delete");
+            return await Details(id, "Delete");
 
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete([FromRoute] int id, Employee model)
+        public async Task<IActionResult> Delete([FromRoute] int id, EmployeeDto model)
         {
             if (ModelState.IsValid)
             {
-                if (id != model.Id) { return BadRequest("Invaild , Enter Employee Id"); }
-                 _unitOfWork.EmployeeRepositry.delete(model);
-                var count = _unitOfWork.Complete();
-                if (count > 0) { return RedirectToAction(nameof(Index)); }
+                var employee = _mapper.Map<Employee>(model);
+                  employee.Id=id;
+               // if (id != model.Id) { return BadRequest("Invaild , Enter Employee Id"); }
+                 _unitOfWork.EmployeeRepositry.delete(employee);
+                var count =await _unitOfWork.CompleteAsync();
+                if (count > 0)
+                {
+                    if (model.ImageName is not null)
+                    {
+                        DocumentSettings.DeleteFile(model.ImageName, "images");
+                    }
+
+                    return RedirectToAction(nameof(Index));
+                }
             }
             return View(model);
 

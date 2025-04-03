@@ -9,6 +9,7 @@ namespace Company.PL.Mapping
         public EmployeeProfile()
         {
             CreateMap<EmployeeDto, Employee>();
+            CreateMap<Employee, EmployeeDto>();
 
         }
     }
