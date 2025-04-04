@@ -1,4 +1,7 @@
-﻿using Company.Mahmoud.DAL.Models;
+﻿using Company.DAL.Models;
+using Company.Mahmoud.DAL.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Company.Mahmoud.DAL.Data.Context
 {
-   public class CompanyDbContextcs:DbContext
+   public class CompanyDbContextcs:IdentityDbContext<AppUsers>
     {
         public CompanyDbContextcs(DbContextOptions <CompanyDbContextcs> Options) : base(Options)
         {
@@ -28,5 +31,6 @@ namespace Company.Mahmoud.DAL.Data.Context
         //}
         public DbSet<Department> Departments { get; set; }
         public DbSet<Employee> Employees { get; set; }
+        
     }
 }
