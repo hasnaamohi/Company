@@ -6,10 +6,12 @@ using Company.Mahmoud.PLL.Repositry;
 using Company.PL.Dtos;
 using Company.PL.Helper;
 using Company.PLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Company.PL.Controllers
 {
+    [Authorize]
     public class EmployeeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

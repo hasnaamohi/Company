@@ -1,3 +1,4 @@
+using Company.DAL.Models;
 using Company.Mahmoud.DAL.Data.Context;
 using Company.Mahmoud.PL.Controllers;
 using Company.Mahmoud.PLL.Interfaces;
@@ -7,6 +8,7 @@ using Company.PL.Services;
 using Company.PLL;
 using Company.PLL.Interfaces;
 using Company.PLL.Repositry;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -33,7 +35,13 @@ namespace Company.Mahmoud.PL
             builder.Services.AddScoped<IScopedService, ScopedService>(); //per reqeust
             builder.Services.AddTransient<ITransentService,TransentService>(); //per operation
             builder.Services.AddSingleton<ISingeltonService, SingletonService>();  //per app
-
+            builder.Services.AddIdentity<AppUsers, IdentityRole>()
+                            .AddEntityFrameworkStores<CompanyDbContextcs>();
+            builder.Services.ConfigureApplicationCookie(config =>
+            {
+                config.LoginPath = "/Account/SignIn";
+                
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -48,7 +56,7 @@ namespace Company.Mahmoud.PL
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

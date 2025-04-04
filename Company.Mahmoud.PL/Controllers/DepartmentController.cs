@@ -5,10 +5,12 @@ using Company.Mahmoud.PLL.Repositry;
 using Company.PL.Dtos;
 using Company.PLL;
 using Company.PLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Company.Mahmoud.PL.Controllers
 {
+    [Authorize]
     public class DepartmentController : Controller
     {
         // private readonly IDepartmentRepositry _departmentRepositry;
